@@ -61,12 +61,15 @@ class ShortenerController < ApplicationController
   private
     # Generate the link id to use
     def generate_id
-      # Generate an 8 character string (0...8)
-      # Made up of random uppper case letters
-      id = (0...8).map { (65 + rand(26)).chr }.join
+      # Characters to use for id
+      charset = Array('A'..'Z') + Array('a'..'z')
+      # Generate an 8 character string
+      # Made up of random characters from charset
+      id = Array.new(8) { charset.sample }.join
       return id
     end
 
+    # Validate that the supplied link resolves, is reachable and is loadable
     def validate_link(link)
       begin
         open(link)

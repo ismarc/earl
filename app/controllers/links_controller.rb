@@ -16,9 +16,12 @@ class LinksController < ApplicationController
 
   # Create a new shortened url
   def create
+    if !params[:link]["link"].start_with?("http")
+      params[:link]["link"] = "http://" + params[:link]["link"]
+    end
     # Validate that the supplied link exists/works
     if !validate_link(params[:link]["link"])
-      render :nothing => true, :status => :bad_request
+      render plain: "BAD REQUEST", :status => :bad_request
       return
     end
 

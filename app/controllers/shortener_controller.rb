@@ -1,8 +1,32 @@
 require 'open-uri'
 
 class ShortenerController < ApplicationController
+  # Ignore security for post shorten calls, any call is good
+  skip_before_action :verify_authenticity_token
+
   # Default entrypoint, displays the main page
   def index
+  end
+
+  # Shortens a URL that is provided in the request body
+  def shorten
+    # Read the link from the body
+    request_link = request.body.read
+
+    params = ActionController::Parameters.new({
+      :link => {
+        "link" => request_link
+      }
+    })
+
+    result_link = LinksController.create_link(params)
+
+    if result_link
+      # Render just the shortened URL back to the client
+      render plain: "http://localhost:3000/" + result_link.link_id
+    else
+      render body: nil, :status => :bad_request
+    end
   end
 
   # Given a link id, find the corresponding link and perform
@@ -15,25 +39,4 @@ class ShortenerController < ApplicationController
       render plain: "Not Found", :status => :not_found
     end
   end
-
-  private
-    # Generate the link id to use
-    def generate_id
-      # Characters to use for id
-      charset = Array('A'..'Z') + Array('a'..'z')
-      # Generate an 8 character string
-      # Made up of random characters from charset
-      id = Array.new(8) { charset.sample }.join
-      return id
-    end
-
-    # Validate that the supplied link resolves, is reachable and is loadable
-    def validate_link(link)
-      begin
-        open(link)
-      rescue
-        return false
-      end
-      return true
-    end
 end

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/links/new', to: 'links#new'
   get '/links/:id', to: 'links#display'
 
+  post '/shorten', to: 'shortener#shorten'
   get '/:id', to: 'shortener#unshorten'
 
   root 'links#new'

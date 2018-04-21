@@ -16,13 +16,27 @@ class LinksController < ApplicationController
 
   # Create a new shortened url
   def create
+    result_link = LinksController.create_link(params)
+    if result_link
+      redirect_to result_link
+    else
+      render body: nil, :status => :bad_request
+    end
+  end
+
+  # Generate a link for a supplied Link object
+  def link_url(param)
+    return "links/" + param["link_id"]
+  end
+
+  # Create a new shortened URL based on the supplied params
+  def self.create_link(params)
     if !params[:link]["link"].start_with?("http")
       params[:link]["link"] = "http://" + params[:link]["link"]
     end
     # Validate that the supplied link exists/works
     if !validate_link(params[:link]["link"])
-      render plain: "BAD REQUEST", :status => :bad_request
-      return
+      return nil
     end
 
     # Find any existing links for the provided URL so we don't generate duplicates
@@ -46,18 +60,12 @@ class LinksController < ApplicationController
     # Save the state of the link prior to rendering
     @link.save()
     
-    redirect_to @link
-    #render plain: @link.link_id
-  end
-
-  # Generate a link for a supplied Link object
-  def link_url(param)
-    return "links/" + param["link_id"]
+    return @link
   end
 
   private
     # Generate the link id to use
-    def generate_id
+    def self.generate_id
       # Characters to use for id
       charset = Array('A'..'Z') + Array('a'..'z')
       # Generate an 8 character string
@@ -67,7 +75,7 @@ class LinksController < ApplicationController
     end
 
     # Validate that the supplied link resolves, is reachable and is loadable
-    def validate_link(link)
+    def self.validate_link(link)
       # Any exception thrown indicates a bad url, otherwise the url is good
       begin
         open(link)

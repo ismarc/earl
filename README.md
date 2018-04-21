@@ -9,7 +9,7 @@ To run, use ```docker-compose up``` and to shutdown, use ```docker-compose down`
 
 # USAGE
 ## Redirects
-Going to http://localhost:3000/<id> will redirect the browser to the appropriate shortened link
+Going to http://localhost:3000/:id will redirect the browser to the appropriate shortened link
 or 404 if the link does not exist.
 
 ## REST API

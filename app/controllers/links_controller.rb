@@ -3,12 +3,16 @@ require 'open-uri'
 class LinksController < ApplicationController
   helper_method :link_url
 
+  # Display an individual shortened link
   def display
     @link = Link.find_by(link_id: params[:id])
+    @base_url = request.protocol+ request.host_with_port + "/"
   end
 
+  # Display a list of all shortened links
   def index
     @links = Link.all
+    @base_url = request.protocol+ request.host_with_port + "/"
   end
 
   def new
@@ -20,7 +24,8 @@ class LinksController < ApplicationController
     if result_link
       redirect_to result_link
     else
-      render body: nil, :status => :bad_request
+      flash[:invalid] = true
+      redirect_to '/links/new'
     end
   end
 

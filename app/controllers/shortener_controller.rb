@@ -4,18 +4,12 @@ class ShortenerController < ApplicationController
   # Ignore security for post shorten calls, any call is good
   skip_before_action :verify_authenticity_token
 
-  # Default entrypoint, displays the main page
-  def index
-  end
-
   # Shortens a URL that is provided in the request body
   def shorten
-    # Read the link from the body
-    request_link = request.body.read
-
+    request_url = params["link"]
     params = ActionController::Parameters.new({
       :link => {
-        "link" => request_link
+        "link" => request_url
       }
     })
 
@@ -23,7 +17,7 @@ class ShortenerController < ApplicationController
 
     if result_link
       # Render just the shortened URL back to the client
-      render plain: "http://localhost:3000/" + result_link.link_id
+      render plain: request.protocol + request.host_with_port + "/" + result_link.link_id
     else
       render body: nil, :status => :bad_request
     end

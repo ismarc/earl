@@ -1,3 +1,6 @@
+<div class="mx-auto w-25 p-5">
+<h1>Earl Link Shortener</h1>
+</div>
 <%= form_with scope: :link, url: links_path, local: true, class: "form-inline w-75 mx-auto p-5 m-height" do |form| %>
   <div class="form-group mx-sm-3 w-75">
     <%= form.text_field :link, class: "form-control w-100", placeholder: "http://www.example.com" %>

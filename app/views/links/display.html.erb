@@ -1,9 +1,15 @@
-<p>
-  <strong>Link:</strong>
-  <a href="<%= @link.link %>"><%= @link.link %></a>
-</p>
-
-<p>
-  <strong>Shortened Link:</strong>
-  <a href="http://localhost:3000/<%= @link.link_id %>">http://localhost:3000/<%= @link.link_id %></a>
-</p>
+<div class="mx-auto w-75 p-5">
+<h1>Link Details</h1>
+</div>
+<table class="table table-striped table-bordered w-75 mx-auto">
+<thead>
+  <tr>
+    <th>Shortened Link</th>
+    <th>Link</th>
+  </tr>
+</thead>
+<tr>
+  <td><a href="http://localhost:3000/<%= @link.link_id %>">http://localhost:3000/<%= @link.link_id %></a></td>
+  <td><a href="<%= @link.link %>"><%= @link.link %></a></td>
+</tr>
+</table>
